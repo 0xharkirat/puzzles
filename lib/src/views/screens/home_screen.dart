@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:puzzles/src/controllers/color_empty_controller.dart';
 import 'package:puzzles/src/controllers/game_controller.dart';
 import 'package:puzzles/src/views/widgets/square_widget.dart';
 
@@ -35,9 +36,10 @@ class HomeScreen extends StatelessWidget {
                 
 
                 if (square == null) {
-                  return const SizedBox(
-                    width: 100,
-                    height: 100,
+                  return  Container(
+                    width: 50,
+                    height: 50,
+                    color: ref.watch(colorEmptyController) ? Colors.lightGreenAccent : null,
                   );
                 }
 

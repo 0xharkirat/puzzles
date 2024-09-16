@@ -1,9 +1,12 @@
+import 'dart:math';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EmptyPosController extends Notifier<int> {
   @override
   int build() {
-    return 1;
+    
+    return Random().nextInt(8);
   }
 
   void changeEmptyPos(int value) {

@@ -13,29 +13,31 @@ class GameController extends Notifier<List<SquareTile?>> {
       if (index == emptyPos) {
         return null;
       }
-      
+
       return SquareTile(value: value++, currentPos: index);
     });
+  }
+
+  bool canMove(int pos) {
+    final emptyPos = ref.read(emptyPosController);
+    return emptyPos == pos - 1 || emptyPos == pos + 1;
   }
 
   void move(int pos) {
     final emptyPos = ref.read(emptyPosController);
     // Check if the selected square is next to the empty square
-    if (emptyPos != pos - 1 && emptyPos != pos + 1) {
+    if (!canMove(pos)) {
       return;
     }
-
     final squares = state;
     final tappedSquare = squares[pos];
 
-    
     squares[emptyPos] = tappedSquare!.copyWith(currentPos: emptyPos);
     squares[pos] = null;
 
     ref.read(emptyPosController.notifier).changeEmptyPos(pos);
 
     state = [...squares];
-  
   }
 }
 

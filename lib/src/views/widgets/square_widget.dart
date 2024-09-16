@@ -1,25 +1,44 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:puzzles/src/controllers/color_empty_controller.dart';
 import 'package:puzzles/src/controllers/game_controller.dart';
 import 'package:puzzles/src/models/square_tile.dart';
 
-class SquareWidget extends ConsumerWidget {
+class SquareWidget extends ConsumerStatefulWidget {
   const SquareWidget({super.key, required this.squareTile});
   final SquareTile squareTile;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<SquareWidget> createState() => _SquareWidgetState();
+}
+
+class _SquareWidgetState extends ConsumerState<SquareWidget> {
+
+  bool isHovered = false;
+  @override
+  Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(0.5),
       child: InkWell(
+        onHover: (value) {
+          setState(() {
+            isHovered = ref.read(gameController.notifier).canMove(widget.squareTile.currentPos) && value;
+            ref.read(colorEmptyController.notifier).changeEmptyPos(isHovered);
+          });
+          
+        },
+        
         onTap: () {
-          ref.read(gameController.notifier).move(squareTile.currentPos);
+          ref.read(gameController.notifier).move(widget.squareTile.currentPos);
+          ref.read(colorEmptyController.notifier).changeEmptyPos(false);
+
         },
         child: Container(
-          width: 100,
-          height: 100,
+          width: 50,
+          height: 50,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primaryContainer,
+            
+            color: isHovered? Colors.blue: Theme.of(context).colorScheme.primaryContainer,
             borderRadius: BorderRadius.zero,
             border: Border.all(
               color: Theme.of(context).colorScheme.onPrimaryContainer,
@@ -28,10 +47,10 @@ class SquareWidget extends ConsumerWidget {
           ),
           child: Center(
             child: Text(
-              (squareTile.value + 1).toString(),
+              (widget.squareTile.value + 1).toString(),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
-                fontSize: 50,
+                fontSize: 25,
               ),
             ),
           ),
