@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:puzzles/src/controllers/game_controller.dart';
 import 'package:puzzles/src/views/widgets/square_widget.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,8 +13,9 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('Flutter Demo'),
       ),
-      body:  Center(
+      body: Center(
         child: Container(
+          padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.zero,
             border: Border.all(
@@ -20,39 +23,28 @@ class HomeScreen extends StatelessWidget {
               width: 1,
             ),
           ),
-          child: const Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Row(
-                mainAxisSize: MainAxisSize.min,
+          child: Consumer(builder: (context, ref, child) {
+            final squares = ref.watch(gameController);
+
+            
+
+            // Map squares to a list of SquareWidget and return them
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: squares.map((square) {
                 
-                children: [
-                  SquareWidget(0),
-                  SquareWidget(1),
-                  SquareWidget(2),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                
-                children: [
-                  SquareWidget(3),
-                  SquareWidget(4),
-                  SquareWidget(5),
-                ],
-              ),
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                
-                children: [
-                  SquareWidget(6),
-                  SquareWidget(7),
-                  SquareWidget(8),
-                ],
-              ),
-              
-            ],
-          ),
+
+                if (square == null) {
+                  return const SizedBox(
+                    width: 100,
+                    height: 100,
+                  );
+                }
+
+                return SquareWidget(squareTile: square);
+              }).toList(),
+            );
+          }),
         ),
       ),
     );

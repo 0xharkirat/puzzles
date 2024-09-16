@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:puzzles/src/controllers/empty_square_controller.dart';
+import 'package:puzzles/src/controllers/game_controller.dart';
+import 'package:puzzles/src/models/square_tile.dart';
 
 class SquareWidget extends ConsumerWidget {
-  const SquareWidget(this.id, {super.key});
-  final int id;
+  const SquareWidget({super.key, required this.squareTile});
+  final SquareTile squareTile;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isEmptySquare = ref.watch(emptySquareController) == id;
-    if (isEmptySquare) {
-      return const SizedBox(
-        width: 100,
-        height: 100,
-      );
-    }
     return Padding(
       padding: const EdgeInsets.all(0.5),
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          ref.read(gameController.notifier).move(squareTile.currentPos);
+        },
         child: Container(
           width: 100,
           height: 100,
@@ -32,7 +28,7 @@ class SquareWidget extends ConsumerWidget {
           ),
           child: Center(
             child: Text(
-              (id + 1).toString(),
+              (squareTile.value + 1).toString(),
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onPrimaryContainer,
                 fontSize: 50,
